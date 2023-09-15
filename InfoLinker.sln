@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoLinker.Api", "InfoLinker.Api\InfoLinker.Api.csproj", "{72873F24-29EE-4FC7-AB17-5D5215983B4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72873F24-29EE-4FC7-AB17-5D5215983B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72873F24-29EE-4FC7-AB17-5D5215983B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72873F24-29EE-4FC7-AB17-5D5215983B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72873F24-29EE-4FC7-AB17-5D5215983B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
