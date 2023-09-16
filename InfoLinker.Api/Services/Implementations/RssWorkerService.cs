@@ -30,12 +30,12 @@ public class RssWorkerService : IRssWorkerService
         //     return cachedContentModels!;
         // }
     
-        var syndicationFeedsTasks = _rssFeeders.Select(feed => GetSyndicationFeedAsync(feed, pageIndex.Value, pageSize.Value));
+        var syndicationFeedsTasks = _rssFeeders.Select(feed => GetSyndicationFeedAsync(feed, pageIndex, pageSize));
         var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
 
         var contentModels = new List<ContentModel>();
         foreach (var feed in syndicationFeeds)
-        {
+        { 
             contentModels.AddRange(feed.Select(CreateContentModel!));
         }
 
@@ -46,6 +46,21 @@ public class RssWorkerService : IRssWorkerService
         // };
         //
         // _memoryCache.Set(cacheKey, contentModels, cacheEntryOptions);
+
+        return contentModels;
+    }
+
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(Guid feederId, int? pageIndex, int? pageSize)
+    {
+        var syndicationFeedsTasks = _rssFeeders.Where(x => x.Id == feederId)
+            .Select(feed => GetSyndicationFeedAsync(feed, pageIndex, pageSize));
+        var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
+
+        var contentModels = new List<ContentModel>();
+        foreach (var feed in syndicationFeeds)
+        { 
+            contentModels.AddRange(feed.Select(CreateContentModel!));
+        }
 
         return contentModels;
     }
@@ -64,7 +79,7 @@ public class RssWorkerService : IRssWorkerService
         };
     }
 
-    private async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(RssFeeder rssFeeder, int pageIndex, int pageSize)
+    private async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(RssFeeder rssFeeder, int? pageIndex, int? pageSize)
     {
         var syndicationItems = new List<CustomSyndicationItem>();
         var mainItems = await ExtractSyndicationItems(rssFeeder, pageIndex, pageSize).ConfigureAwait(false);

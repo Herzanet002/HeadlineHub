@@ -4,7 +4,7 @@ namespace InfoLinker.Api.Services.Implementations;
 
 public class CustomSyndicationItem
 {
-    public Guid FeederId { get; set; }
+    public Guid FeederId { get; init; }
     
-    public SyndicationItem OriginalItem { get; set; } = null!;
+    public SyndicationItem OriginalItem { get; init; } = null!;
 }

@@ -1,7 +1,7 @@
+using Carter;
 using InfoLinker.Api.Models;
 using InfoLinker.Api.Services.Implementations;
 using InfoLinker.Api.Services.Interfaces;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,7 @@ builder.Services.AddSingleton<IRssWorkerService, RssWorkerService>();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
@@ -24,11 +25,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.MapGet("news", 
-    async (IRssWorkerService rssWorkerService, int? pageSize, int? pageIndex) 
-        => await rssWorkerService.GetFeeds(pageIndex, pageSize));
-
-app.MapGet("news-providers",(IOptions<List<RssFeeder>> rssFeeders) => rssFeeders.Value);
-
+app.MapCarter();
 app.Run();
