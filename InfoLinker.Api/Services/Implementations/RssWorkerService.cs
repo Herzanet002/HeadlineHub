@@ -29,9 +29,9 @@ public class RssWorkerService : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(Guid feederId, int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex, int? pageSize)
     {
-        var syndicationFeedsTasks = _rssFeeders.Where(x => x.Id == feederId)
+        var syndicationFeedsTasks = _rssFeeders.IntersectBy(feedersIds, feeder => feeder.Id)
             .Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
         var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
 

@@ -1,6 +1,7 @@
 ﻿using Carter;
 using InfoLinker.Api.Models;
 using InfoLinker.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace InfoLinker.Api.Endpoints;
@@ -15,7 +16,7 @@ public class NewsEndpoints : CarterModule
     {
         app.MapGet($"{ApiRoutePath}/news", GetPaginatedNews);
         app.MapGet($"{ApiRoutePath}/news-providers", GetRssFeeders);
-        app.MapGet($"{ApiRoutePath}/news/{{feederId:guid}}", GetPaginatedNewsByFeeder);
+        app.MapPost($"{ApiRoutePath}/news", GetPaginatedNewsByFeeders);
     }
 
     public NewsEndpoints(IRssWorkerService rssWorkerService, IOptions<List<RssFeeder>> rssFeeders)
@@ -30,6 +31,18 @@ public class NewsEndpoints : CarterModule
     private IEnumerable<RssFeeder> GetRssFeeders() 
         => _rssFeeders.Value;
 
-    private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeder(Guid feederId, int? pageSize, int? pageIndex)
-        => await _rssWorkerService.GetFeeds(feederId, pageSize, pageIndex);
+    private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeders(
+        [FromBody] IEnumerable<string> feedersIds, int? pageSize, int? pageIndex)
+    {
+        var validGuids = new List<Guid>();
+
+        foreach (var id in feedersIds)
+        {
+            if (Guid.TryParse(id, out var guid))
+            {
+                validGuids.Add(guid);
+            }
+        }
+        return await _rssWorkerService.GetFeeds(validGuids, pageSize, pageIndex);
+    }
 }

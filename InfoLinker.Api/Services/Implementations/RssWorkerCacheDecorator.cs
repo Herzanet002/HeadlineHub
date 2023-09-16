@@ -35,7 +35,7 @@ public class RssWorkerCacheDecorator : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(Guid feederId, int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex, int? pageSize)
     {
         var cacheKey = $"{nameof(GetFeeds)}_{pageIndex}_{pageSize}";
         
@@ -44,7 +44,7 @@ public class RssWorkerCacheDecorator : IRssWorkerService
             return cachedContentModels!;
         }
 
-        var contentModels = (await _rssWorkerService.GetFeeds(feederId, pageIndex, pageSize)).ToList();
+        var contentModels = (await _rssWorkerService.GetFeeds(feedersIds, pageIndex, pageSize)).ToList();
         var cacheEntryOptions = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
