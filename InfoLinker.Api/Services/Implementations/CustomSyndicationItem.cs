@@ -1,0 +1,10 @@
+﻿using System.ServiceModel.Syndication;
+
+namespace InfoLinker.Api.Services.Implementations;
+
+public class CustomSyndicationItem
+{
+    public Guid FeederId { get; set; }
+    
+    public SyndicationItem OriginalItem { get; set; } = null!;
+}

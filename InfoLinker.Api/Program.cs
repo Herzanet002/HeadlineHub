@@ -1,15 +1,20 @@
+using InfoLinker.Api.Models;
+using InfoLinker.Api.Services.Implementations;
+using InfoLinker.Api.Services.Interfaces;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IRssWorkerService, RssWorkerService>();
+builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -20,6 +25,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapGet("news", 
+    async (IRssWorkerService rssWorkerService, int? pageSize, int? pageIndex) 
+        => await rssWorkerService.GetFeeds(pageIndex, pageSize));
+
+app.MapGet("news-providers",(IOptions<List<RssFeeder>> rssFeeders) => rssFeeders.Value);
 
 app.Run();
