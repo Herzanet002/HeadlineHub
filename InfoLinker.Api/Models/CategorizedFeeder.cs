@@ -1,6 +1,6 @@
 ﻿namespace InfoLinker.Api.Models;
 
-public record CategorizedFeed
+public record CategorizedFeeder
 {
     public Guid Id { get; set; }
 

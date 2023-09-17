@@ -47,11 +47,11 @@ public class RssWorkerService : IRssWorkerService
         return contentModels;
     }
     
-    private static IEnumerable<CategorizedFeed> FindSuitableFeeders(IEnumerable<RssFeeder> feeders, IEnumerable<Guid> feederIds)
+    private static IEnumerable<CategorizedFeeder> FindSuitableFeeders(IEnumerable<RssFeeder> feeders, IEnumerable<Guid> feederIds)
     {
         var intersectedMain = feeders.IntersectBy(feederIds, feeder => feeder.Id);
-        var categorizedFeeds = feeders.Where(rssFeeder => rssFeeder.CategorizedFeeds != null)
-            .SelectMany(rssFeeder => rssFeeder.CategorizedFeeds!);
+        var categorizedFeeds = feeders.Where(rssFeeder => rssFeeder.CategorizedFeeders != null)
+            .SelectMany(rssFeeder => rssFeeder.CategorizedFeeders!);
         var intersectedSecond = categorizedFeeds.IntersectBy(feederIds, feeder => feeder.Id);
         return intersectedMain.Union(intersectedSecond);
     }

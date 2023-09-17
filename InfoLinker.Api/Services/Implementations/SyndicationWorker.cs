@@ -23,12 +23,12 @@ public class SyndicationWorker : ISyndicationWorker
             syndicationItems.AddRange(mainItems);
         }
 
-        if (rssFeeder.CategorizedFeeds == null || !rssFeeder.CategorizedFeeds.Any())
+        if (rssFeeder.CategorizedFeeders == null || !rssFeeder.CategorizedFeeders.Any())
         {
             return syndicationItems;
         }
 
-        foreach (var categorizedFeed in rssFeeder.CategorizedFeeds)
+        foreach (var categorizedFeed in rssFeeder.CategorizedFeeders)
         {
             var feed = await ExtractSyndicationItems(categorizedFeed, pageIndex, pageSize)
                 .ConfigureAwait(false);
@@ -41,7 +41,7 @@ public class SyndicationWorker : ISyndicationWorker
         return syndicationItems;
     }
 
-    public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(CategorizedFeed rssFeeder,
+    public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(CategorizedFeeder rssFeeder,
         int? pageIndex, int? pageSize)
     {
         var syndicationItems = new List<CustomSyndicationItem>();
@@ -55,7 +55,7 @@ public class SyndicationWorker : ISyndicationWorker
         return syndicationItems;
     }
 
-    private async ValueTask<IEnumerable<CustomSyndicationItem>?> ExtractSyndicationItems(CategorizedFeed rssFeeder,
+    private async ValueTask<IEnumerable<CustomSyndicationItem>?> ExtractSyndicationItems(CategorizedFeeder rssFeeder,
         int? pageIndex, int? pageSize)
     {
         try
