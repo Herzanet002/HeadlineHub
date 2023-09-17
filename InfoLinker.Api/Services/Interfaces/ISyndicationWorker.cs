@@ -1,6 +1,6 @@
 ﻿using InfoLinker.Api.Models;
 
-namespace InfoLinker.Api.Services.Implementations;
+namespace InfoLinker.Api.Services.Interfaces;
 
 public interface ISyndicationWorker
 {

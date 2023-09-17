@@ -1,6 +1,7 @@
 ﻿using System.ServiceModel.Syndication;
 using System.Xml;
 using InfoLinker.Api.Models;
+using InfoLinker.Api.Services.Interfaces;
 
 namespace InfoLinker.Api.Services.Implementations;
 
