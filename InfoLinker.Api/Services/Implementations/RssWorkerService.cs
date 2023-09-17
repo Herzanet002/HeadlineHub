@@ -18,8 +18,9 @@ public class RssWorkerService : IRssWorkerService
 
     public async ValueTask<IEnumerable<ContentModel>> GetFeeds(int? pageIndex, int? pageSize)
     {
-        var syndicationFeedsTasks = _rssFeeders.Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
-        var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
+        var syndicationFeedsTasks =
+            _rssFeeders.Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
+        var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks.Select(x => x)).ConfigureAwait(false);
 
         var contentModels = new List<ContentModel>();
         foreach (var feed in syndicationFeeds)
@@ -29,9 +30,11 @@ public class RssWorkerService : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex,
+        int? pageSize)
     {
-        var syndicationFeedsTasks = _rssFeeders.IntersectBy(feedersIds, feeder => feeder.Id)
+        var suitableFeeders = FindSuitableFeeders(_rssFeeders, feedersIds);
+        var syndicationFeedsTasks = suitableFeeders
             .Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
         var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
 
@@ -42,5 +45,14 @@ public class RssWorkerService : IRssWorkerService
         }
 
         return contentModels;
+    }
+    
+    private static IEnumerable<CategorizedFeed> FindSuitableFeeders(IEnumerable<RssFeeder> feeders, IEnumerable<Guid> feederIds)
+    {
+        var intersectedMain = feeders.IntersectBy(feederIds, feeder => feeder.Id);
+        var categorizedFeeds = feeders.Where(rssFeeder => rssFeeder.CategorizedFeeds != null)
+            .SelectMany(rssFeeder => rssFeeder.CategorizedFeeds!);
+        var intersectedSecond = categorizedFeeds.IntersectBy(feederIds, feeder => feeder.Id);
+        return intersectedMain.Union(intersectedSecond);
     }
 }

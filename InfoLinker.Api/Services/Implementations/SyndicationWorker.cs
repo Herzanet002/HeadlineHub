@@ -41,6 +41,20 @@ public class SyndicationWorker : ISyndicationWorker
         return syndicationItems;
     }
 
+    public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(CategorizedFeed rssFeeder,
+        int? pageIndex, int? pageSize)
+    {
+        var syndicationItems = new List<CustomSyndicationItem>();
+        var mainItems = await ExtractSyndicationItems(rssFeeder, pageIndex, pageSize)
+            .ConfigureAwait(false);
+        if (mainItems != null)
+        {
+            syndicationItems.AddRange(mainItems);
+        }
+
+        return syndicationItems;
+    }
+
     private async ValueTask<IEnumerable<CustomSyndicationItem>?> ExtractSyndicationItems(CategorizedFeed rssFeeder,
         int? pageIndex, int? pageSize)
     {

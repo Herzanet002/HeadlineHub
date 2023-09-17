@@ -18,7 +18,7 @@ public class RssWorkerCacheDecorator : IRssWorkerService
     public async ValueTask<IEnumerable<ContentModel>> GetFeeds(int? pageIndex, int? pageSize)
     {
         var cacheKey = $"{nameof(GetFeeds)}_{pageIndex}_{pageSize}";
-        
+
         if (_memoryCache.TryGetValue<IEnumerable<ContentModel>>(cacheKey, out var cachedContentModels))
         {
             return cachedContentModels!;
@@ -35,10 +35,11 @@ public class RssWorkerCacheDecorator : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex,
+        int? pageSize)
     {
-        var cacheKey = $"{nameof(GetFeeds)}_{pageIndex}_{pageSize}";
-        
+        var cacheKey = $"{nameof(GetFeeds)}_{feedersIds.GetHashCode()}_{pageIndex}_{pageSize}";
+
         if (_memoryCache.TryGetValue<IEnumerable<ContentModel>>(cacheKey, out var cachedContentModels))
         {
             return cachedContentModels!;
