@@ -20,16 +20,16 @@ public class RssWorkerCacheDecorator : IRssWorkerService
         _cacheSettings = cacheSettings.CurrentValue;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(PageInfo pageInfo)
     {
-        var cacheKey = $"{nameof(GetFeeds)}_{pageIndex}_{pageSize}";
+        var cacheKey = $"{nameof(GetFeeds)}_{pageInfo.Index}_{pageInfo.Size}";
 
         if (_memoryCache.TryGetValue<IEnumerable<ContentModel>>(cacheKey, out var cachedContentModels))
         {
             return cachedContentModels!;
         }
 
-        var contentModels = (await _rssWorkerService.GetFeeds(pageIndex, pageSize)).ToList();
+        var contentModels = (await _rssWorkerService.GetFeeds(pageInfo)).ToList();
         var cacheEntryOptions = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = _cacheSettings.CacheTtl
@@ -40,17 +40,16 @@ public class RssWorkerCacheDecorator : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex,
-        int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, PageInfo pageInfo)
     {
-        var cacheKey = $"{nameof(GetFeeds)}_{string.Join("_", feedersIds)}_{pageIndex}_{pageSize}";
+        var cacheKey = $"{nameof(GetFeeds)}_{string.Join("_", feedersIds)}_{pageInfo.Index}_{pageInfo.Size}";
 
         if (_memoryCache.TryGetValue<IEnumerable<ContentModel>>(cacheKey, out var cachedContentModels))
         {
             return cachedContentModels!;
         }
 
-        var contentModels = (await _rssWorkerService.GetFeeds(feedersIds, pageIndex, pageSize)).ToList();
+        var contentModels = (await _rssWorkerService.GetFeeds(feedersIds, pageInfo)).ToList();
         var cacheEntryOptions = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = _cacheSettings.CacheTtl

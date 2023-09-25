@@ -26,12 +26,12 @@ public class NewsEndpoints : CarterModule
     }
 
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNews(int? pageSize, int? pageIndex)
-        => await _rssWorkerService.GetFeeds(pageIndex, pageSize);
+        => await _rssWorkerService.GetFeeds(new PageInfo(pageIndex, pageSize));
 
     private IEnumerable<RssFeeder> GetRssFeeders()
         => _rssFeeders.CurrentValue;
 
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeders(
         [FromBody] GetNewsByFeedersDto feedersDto, int? pageSize, int? pageIndex)
-        => await _rssWorkerService.GetFeeds(feedersDto.Ids, pageIndex, pageSize);
+        => await _rssWorkerService.GetFeeds(feedersDto.Ids, new PageInfo(pageIndex, pageSize));
 }

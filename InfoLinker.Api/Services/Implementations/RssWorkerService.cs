@@ -16,10 +16,10 @@ public class RssWorkerService : IRssWorkerService
         _rssFeeders = rssFeeders.Value;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(int? pageIndex, int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(PageInfo pageInfo)
     {
         var syndicationFeedsTasks =
-            _rssFeeders.Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
+            _rssFeeders.Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageInfo));
         var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks.Select(x => x)).ConfigureAwait(false);
 
         var contentModels = new List<ContentModel>();
@@ -30,12 +30,11 @@ public class RssWorkerService : IRssWorkerService
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, int? pageIndex,
-        int? pageSize)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, PageInfo pageInfo)
     {
         var suitableFeeders = FindSuitableFeeders(_rssFeeders, feedersIds);
         var syndicationFeedsTasks = suitableFeeders
-            .Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageIndex, pageSize));
+            .Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageInfo));
         var syndicationFeeds = await Task.WhenAll(syndicationFeedsTasks).ConfigureAwait(false);
 
         var contentModels = new List<ContentModel>();

@@ -12,11 +12,10 @@ public class SyndicationWorker : ISyndicationWorker
     public SyndicationWorker(IHttpClientFactory httpClientFactory)
         => _httpClientFactory = httpClientFactory;
 
-    public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(RssFeeder rssFeeder, int? pageIndex,
-        int? pageSize)
+    public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(RssFeeder rssFeeder, PageInfo pageInfo)
     {
         var syndicationItems = new List<CustomSyndicationItem>();
-        var mainItems = await ExtractSyndicationItems(rssFeeder, pageIndex, pageSize)
+        var mainItems = await ExtractSyndicationItems(rssFeeder, pageInfo)
             .ConfigureAwait(false);
         if (mainItems != null)
         {
@@ -30,7 +29,7 @@ public class SyndicationWorker : ISyndicationWorker
 
         foreach (var categorizedFeed in rssFeeder.CategorizedFeeders)
         {
-            var feed = await ExtractSyndicationItems(categorizedFeed, pageIndex, pageSize)
+            var feed = await ExtractSyndicationItems(categorizedFeed, pageInfo)
                 .ConfigureAwait(false);
             if (feed != null)
             {
@@ -42,10 +41,10 @@ public class SyndicationWorker : ISyndicationWorker
     }
 
     public async Task<IEnumerable<CustomSyndicationItem?>> GetSyndicationFeedAsync(CategorizedFeeder rssFeeder,
-        int? pageIndex, int? pageSize)
+        PageInfo pageInfo)
     {
         var syndicationItems = new List<CustomSyndicationItem>();
-        var mainItems = await ExtractSyndicationItems(rssFeeder, pageIndex, pageSize)
+        var mainItems = await ExtractSyndicationItems(rssFeeder, pageInfo)
             .ConfigureAwait(false);
         if (mainItems != null)
         {
@@ -56,7 +55,7 @@ public class SyndicationWorker : ISyndicationWorker
     }
 
     private async ValueTask<IEnumerable<CustomSyndicationItem>?> ExtractSyndicationItems(CategorizedFeeder rssFeeder,
-        int? pageIndex, int? pageSize)
+        PageInfo pageInfo)
     {
         try
         {
@@ -70,11 +69,11 @@ public class SyndicationWorker : ISyndicationWorker
             using var reader = XmlReader.Create(response, new XmlReaderSettings { Async = true });
 
             var feed = SyndicationFeed.Load<SyndicationFeed>(reader);
-            if (pageIndex.HasValue && pageSize.HasValue)
+            if (pageInfo.Index.HasValue && pageInfo.Size.HasValue)
             {
                 return feed.Items
-                    .Skip((pageIndex.Value - 1) * pageSize.Value)
-                    .Take(pageSize.Value)
+                    .Skip((pageInfo.Index.Value - 1) * pageInfo.Size.Value)
+                    .Take(pageInfo.Size.Value)
                     .Select(originalItem => new CustomSyndicationItem
                     {
                         FeederId = rssFeeder.Id,
