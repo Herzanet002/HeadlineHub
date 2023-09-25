@@ -1,4 +1,5 @@
 using Carter;
+using FluentValidation;
 using InfoLinker.Api;
 using InfoLinker.Api.Models;
 using InfoLinker.Api.Services.Implementations;
@@ -18,6 +19,7 @@ builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameo
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddCarter();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(PageInfo), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
