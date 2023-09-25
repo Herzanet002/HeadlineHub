@@ -14,6 +14,7 @@ builder.Services.AddSingleton<ISyndicationWorker, SyndicationWorker>();
 builder.Services.AddSingleton<IRssWorkerService, RssWorkerService>();
 builder.Services.Decorate<IRssWorkerService, RssWorkerCacheDecorator>();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddCarter();

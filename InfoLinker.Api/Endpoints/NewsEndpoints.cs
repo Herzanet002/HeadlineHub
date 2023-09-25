@@ -9,7 +9,7 @@ namespace InfoLinker.Api.Endpoints;
 public class NewsEndpoints : CarterModule
 {
     private readonly IRssWorkerService _rssWorkerService;
-    private readonly IOptions<List<RssFeeder>> _rssFeeders;
+    private readonly IOptionsMonitor<List<RssFeeder>> _rssFeeders;
     private const string ApiRoutePath = "/api";
 
     public override void AddRoutes(IEndpointRouteBuilder app)
@@ -19,7 +19,7 @@ public class NewsEndpoints : CarterModule
         app.MapPost($"{ApiRoutePath}/news", GetPaginatedNewsByFeeders);
     }
 
-    public NewsEndpoints(IRssWorkerService rssWorkerService, IOptions<List<RssFeeder>> rssFeeders)
+    public NewsEndpoints(IRssWorkerService rssWorkerService, IOptionsMonitor<List<RssFeeder>> rssFeeders)
     {
         _rssWorkerService = rssWorkerService;
         _rssFeeders = rssFeeders;
@@ -29,7 +29,7 @@ public class NewsEndpoints : CarterModule
         => await _rssWorkerService.GetFeeds(pageIndex, pageSize);
 
     private IEnumerable<RssFeeder> GetRssFeeders()
-        => _rssFeeders.Value;
+        => _rssFeeders.CurrentValue;
 
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeders(
         [FromBody] GetNewsByFeedersDto feedersDto, int? pageSize, int? pageIndex)
