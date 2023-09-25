@@ -1,8 +1,8 @@
 ﻿namespace InfoLinker.Api.Models;
 
-public record RssFeeder : CategorizedFeed
+public record RssFeeder : CategorizedFeeder
 {
     public string? FeederImageLink { get; set; }
-    
-    public List<CategorizedFeed>? CategorizedFeeds { get; set; }
+
+    public List<CategorizedFeeder>? CategorizedFeeders { get; set; }
 }

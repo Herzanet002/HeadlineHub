@@ -1,4 +1,5 @@
 ﻿using Carter;
+using FluentValidation;
 using InfoLinker.Api.Models;
 using InfoLinker.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ namespace InfoLinker.Api.Endpoints;
 public class NewsEndpoints : CarterModule
 {
     private readonly IRssWorkerService _rssWorkerService;
-    private readonly IOptions<List<RssFeeder>> _rssFeeders;
+    private readonly IOptionsMonitor<List<RssFeeder>> _rssFeeders;
+    private readonly IValidator<PageInfo> _pageInfoValidator;
     private const string ApiRoutePath = "/api";
 
     public override void AddRoutes(IEndpointRouteBuilder app)
@@ -19,30 +21,29 @@ public class NewsEndpoints : CarterModule
         app.MapPost($"{ApiRoutePath}/news", GetPaginatedNewsByFeeders);
     }
 
-    public NewsEndpoints(IRssWorkerService rssWorkerService, IOptions<List<RssFeeder>> rssFeeders)
+    public NewsEndpoints(IRssWorkerService rssWorkerService, IOptionsMonitor<List<RssFeeder>> rssFeeders,
+        IValidator<PageInfo> pageInfoValidator)
     {
         _rssWorkerService = rssWorkerService;
         _rssFeeders = rssFeeders;
+        _pageInfoValidator = pageInfoValidator;
     }
 
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNews(int? pageSize, int? pageIndex)
-        => await _rssWorkerService.GetFeeds(pageIndex, pageSize);
+    {
+        var pageInfo = new PageInfo(pageIndex, pageSize);
+        await _pageInfoValidator.ValidateAndThrowAsync(pageInfo);
+        return await _rssWorkerService.GetFeeds(pageInfo);
+    }
 
-    private IEnumerable<RssFeeder> GetRssFeeders() 
-        => _rssFeeders.Value;
+    private IEnumerable<RssFeeder> GetRssFeeders()
+        => _rssFeeders.CurrentValue;
 
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeders(
-        [FromBody] IEnumerable<string> feedersIds, int? pageSize, int? pageIndex)
+        [FromBody] GetNewsByFeedersDto feedersDto, int? pageSize, int? pageIndex)
     {
-        var validGuids = new List<Guid>();
-
-        foreach (var id in feedersIds)
-        {
-            if (Guid.TryParse(id, out var guid))
-            {
-                validGuids.Add(guid);
-            }
-        }
-        return await _rssWorkerService.GetFeeds(validGuids, pageSize, pageIndex);
+        var pageInfo = new PageInfo(pageIndex, pageSize);
+        await _pageInfoValidator.ValidateAndThrowAsync(pageInfo);
+        return await _rssWorkerService.GetFeeds(feedersDto.Ids, pageInfo);
     }
 }

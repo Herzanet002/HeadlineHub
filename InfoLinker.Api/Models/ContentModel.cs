@@ -3,7 +3,7 @@
 public record ContentModel
 {
     public Guid FeederId { get; set; }
-    
+
     public string? Title { get; set; }
 
     public string? Link { get; set; }
@@ -12,7 +12,7 @@ public record ContentModel
 
     public DateTime? PubDate { get; set; }
 
-    public string? ImageUrl { get; set; } 
-    
+    public string? ImageUrl { get; set; }
+
     public ICollection<string>? Categories { get; set; }
 }

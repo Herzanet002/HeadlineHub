@@ -12,7 +12,7 @@ public static partial class HelperExtensions
 
     [GeneratedRegex("<.*?>")]
     private static partial Regex HtmlRegex();
-    
+
     public static ContentModel CreateContentModel(this CustomSyndicationItem element)
         => new()
         {

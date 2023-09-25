@@ -1,10 +1,12 @@
 using Carter;
+using FluentValidation;
 using InfoLinker.Api;
 using InfoLinker.Api.Models;
 using InfoLinker.Api.Services.Implementations;
 using InfoLinker.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile("providers.json");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -13,17 +15,16 @@ builder.Services.AddSingleton<ISyndicationWorker, SyndicationWorker>();
 builder.Services.AddSingleton<IRssWorkerService, RssWorkerService>();
 builder.Services.Decorate<IRssWorkerService, RssWorkerCacheDecorator>();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddCarter();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(PageInfo), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
