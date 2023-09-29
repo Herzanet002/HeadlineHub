@@ -1,6 +1,6 @@
-﻿using InfoLinker.Api.Models;
+﻿using HeadlineHub.Api.Models;
 
-namespace InfoLinker.Api.Services.Interfaces;
+namespace HeadlineHub.Api.Services.Interfaces;
 
 public interface ISyndicationWorker
 {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using InfoLinker.Api.Models;
+using HeadlineHub.Api.Models;
 
-namespace InfoLinker.Api.Validators;
+namespace HeadlineHub.Api.Validators;
 
 public class PageInfoValidator : AbstractValidator<PageInfo>
 {

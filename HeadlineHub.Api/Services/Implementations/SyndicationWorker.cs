@@ -1,9 +1,9 @@
 ﻿using System.ServiceModel.Syndication;
 using System.Xml;
-using InfoLinker.Api.Models;
-using InfoLinker.Api.Services.Interfaces;
+using HeadlineHub.Api.Models;
+using HeadlineHub.Api.Services.Interfaces;
 
-namespace InfoLinker.Api.Services.Implementations;
+namespace HeadlineHub.Api.Services.Implementations;
 
 public class SyndicationWorker : ISyndicationWorker
 {
