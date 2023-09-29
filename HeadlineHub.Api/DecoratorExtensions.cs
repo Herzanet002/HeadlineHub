@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace InfoLinker.Api;
+namespace HeadlineHub.Api;
 
 public static class DecoratorExtensions
 {

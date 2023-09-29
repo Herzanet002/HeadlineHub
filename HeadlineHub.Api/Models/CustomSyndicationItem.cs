@@ -1,6 +1,6 @@
 ﻿using System.ServiceModel.Syndication;
 
-namespace InfoLinker.Api.Models;
+namespace HeadlineHub.Api.Models;
 
 public class CustomSyndicationItem
 {

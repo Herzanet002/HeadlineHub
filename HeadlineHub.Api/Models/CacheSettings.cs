@@ -1,4 +1,4 @@
-﻿namespace InfoLinker.Api.Models;
+﻿namespace HeadlineHub.Api.Models;
 
 public class CacheSettings
 {

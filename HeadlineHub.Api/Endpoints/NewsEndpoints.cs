@@ -1,11 +1,11 @@
 ﻿using Carter;
 using FluentValidation;
-using InfoLinker.Api.Models;
-using InfoLinker.Api.Services.Interfaces;
+using HeadlineHub.Api.Models;
+using HeadlineHub.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace InfoLinker.Api.Endpoints;
+namespace HeadlineHub.Api.Endpoints;
 
 public class NewsEndpoints : CarterModule
 {

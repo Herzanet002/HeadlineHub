@@ -1,9 +1,9 @@
-﻿using InfoLinker.Api.Models;
-using InfoLinker.Api.Services.Interfaces;
+﻿using HeadlineHub.Api.Models;
+using HeadlineHub.Api.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
-namespace InfoLinker.Api.Services.Implementations;
+namespace HeadlineHub.Api.Services.Implementations;
 
 public class RssWorkerCacheDecorator : IRssWorkerService
 {

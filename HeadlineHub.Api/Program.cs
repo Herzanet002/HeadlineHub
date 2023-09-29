@@ -1,9 +1,9 @@
 using Carter;
 using FluentValidation;
-using InfoLinker.Api;
-using InfoLinker.Api.Models;
-using InfoLinker.Api.Services.Implementations;
-using InfoLinker.Api.Services.Interfaces;
+using HeadlineHub.Api;
+using HeadlineHub.Api.Models;
+using HeadlineHub.Api.Services.Implementations;
+using HeadlineHub.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("providers.json");
