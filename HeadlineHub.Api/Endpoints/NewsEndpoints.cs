@@ -2,6 +2,8 @@
 using FluentValidation;
 using HeadlineHub.Api.Models;
 using HeadlineHub.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -12,13 +14,12 @@ public class NewsEndpoints : CarterModule
     private readonly IRssWorkerService _rssWorkerService;
     private readonly IOptionsMonitor<List<RssFeeder>> _rssFeeders;
     private readonly IValidator<PageInfo> _pageInfoValidator;
-    private const string ApiRoutePath = "/api";
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet($"{ApiRoutePath}/news", GetPaginatedNews);
-        app.MapGet($"{ApiRoutePath}/news-providers", GetRssFeeders);
-        app.MapPost($"{ApiRoutePath}/news", GetPaginatedNewsByFeeders);
+        app.MapGet($"{ApiConstants.ApiRoutePath}/news", GetPaginatedNews);
+        app.MapGet($"{ApiConstants.ApiRoutePath}/news-providers", GetRssFeeders);
+        app.MapPost($"{ApiConstants.ApiRoutePath}/news", GetPaginatedNewsByFeeders);
     }
 
     public NewsEndpoints(IRssWorkerService rssWorkerService, IOptionsMonitor<List<RssFeeder>> rssFeeders,
@@ -29,6 +30,7 @@ public class NewsEndpoints : CarterModule
         _pageInfoValidator = pageInfoValidator;
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNews(int? pageSize, int? pageIndex)
     {
         var pageInfo = new PageInfo(pageIndex, pageSize);
