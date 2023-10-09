@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HeadlineHub.Api.Models;
+using HeadlineHub.Domain.Common;
 
 namespace HeadlineHub.Api.Validators;
 

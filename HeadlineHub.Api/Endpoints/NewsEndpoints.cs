@@ -1,7 +1,8 @@
 ﻿using Carter;
 using FluentValidation;
 using HeadlineHub.Api.Models;
-using HeadlineHub.Api.Services.Interfaces;
+using HeadlineHub.Application.Interfaces.Services;
+using HeadlineHub.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

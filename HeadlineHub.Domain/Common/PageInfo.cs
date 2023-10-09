@@ -1,4 +1,4 @@
-﻿namespace HeadlineHub.Api.Models;
+﻿namespace HeadlineHub.Domain.Common;
 
 public class PageInfo
 {

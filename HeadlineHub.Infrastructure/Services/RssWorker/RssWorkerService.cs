@@ -1,8 +1,9 @@
-﻿using HeadlineHub.Api.Models;
-using HeadlineHub.Api.Services.Interfaces;
+﻿using HeadlineHub.Application.Common.Extensions;
+using HeadlineHub.Application.Interfaces.Services;
+using HeadlineHub.Domain.Common;
 using Microsoft.Extensions.Options;
 
-namespace HeadlineHub.Api.Services.Implementations;
+namespace HeadlineHub.Infrastructure.Services.RssWorker;
 
 public class RssWorkerService : IRssWorkerService
 {

@@ -1,6 +1,10 @@
 ﻿using System.Text;
+using HeadlineHub.Application.Common.Extensions;
+using HeadlineHub.Application.Interfaces.Services;
 using HeadlineHub.Infrastructure.JwtAuthentication;
 using HeadlineHub.Infrastructure.JwtAuthentication.Options;
+using HeadlineHub.Infrastructure.Services;
+using HeadlineHub.Infrastructure.Services.RssWorker;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +38,15 @@ public static class DependencyInjection
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(jwtOptions.Secret))
             });
+        return services;
+    }
+
+    public static IServiceCollection AddHeadlineHubWorkers(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddSingleton<ISyndicationWorker, SyndicationWorker>();
+        services.AddSingleton<IRssWorkerService, RssWorkerService>();
+        services.Decorate<IRssWorkerService, RssWorkerCacheDecorator>();
         return services;
     }
 }

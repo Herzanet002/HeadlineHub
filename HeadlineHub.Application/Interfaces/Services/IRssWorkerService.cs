@@ -1,6 +1,6 @@
-﻿using HeadlineHub.Api.Models;
+﻿using HeadlineHub.Domain.Common;
 
-namespace HeadlineHub.Api.Services.Interfaces;
+namespace HeadlineHub.Application.Interfaces.Services;
 
 public interface IRssWorkerService
 {

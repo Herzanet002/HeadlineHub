@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace HeadlineHub.Api;
+namespace HeadlineHub.Application.Common.Extensions;
 
 public static class DecoratorExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace HeadlineHub.Api.Models;
+﻿namespace HeadlineHub.Infrastructure.Common.Configurations;
 
 public class CacheSettings
 {

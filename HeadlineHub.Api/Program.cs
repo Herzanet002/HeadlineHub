@@ -1,10 +1,9 @@
 using Carter;
 using FluentValidation;
 using HeadlineHub.Api;
-using HeadlineHub.Api.Models;
-using HeadlineHub.Api.Services.Implementations;
-using HeadlineHub.Api.Services.Interfaces;
+using HeadlineHub.Domain.Common;
 using HeadlineHub.Infrastructure;
+using HeadlineHub.Infrastructure.Common.Configurations;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,15 +12,12 @@ builder.Configuration.AddJsonFile("providers.json");
 ConfigureSwaggerGen(builder);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<ISyndicationWorker, SyndicationWorker>();
-builder.Services.AddSingleton<IRssWorkerService, RssWorkerService>();
-builder.Services.Decorate<IRssWorkerService, RssWorkerCacheDecorator>();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(ApiConstants), ServiceLifetime.Singleton);
 builder.Services.AddHttpClient();
-builder.Services.AddMemoryCache();
 builder.Services.AddCarter();
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(PageInfo), ServiceLifetime.Singleton);
+builder.Services.AddHeadlineHubWorkers();
 builder.Services.AddHeadlineHubIdentity(builder.Configuration);
 
 var app = builder.Build();
