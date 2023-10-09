@@ -3,7 +3,6 @@ using FluentValidation;
 using HeadlineHub.Api;
 using HeadlineHub.Domain.Common;
 using HeadlineHub.Infrastructure;
-using HeadlineHub.Infrastructure.Common.Configurations;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +12,10 @@ ConfigureSwaggerGen(builder);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
-builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(ApiConstants), ServiceLifetime.Singleton);
 builder.Services.AddHttpClient();
 builder.Services.AddCarter();
-builder.Services.AddHeadlineHubWorkers();
+builder.Services.AddHeadlineHubWorkers(builder.Configuration);
 builder.Services.AddHeadlineHubIdentity(builder.Configuration);
 
 var app = builder.Build();

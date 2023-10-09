@@ -2,7 +2,7 @@
 
 namespace HeadlineHub.Domain.Common;
 
-public class CustomSyndicationItem
+public record CustomSyndicationItem
 {
     public Guid FeederId { get; init; }
 

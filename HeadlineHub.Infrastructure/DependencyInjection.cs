@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using HeadlineHub.Application.Common.Extensions;
 using HeadlineHub.Application.Interfaces.Services;
+using HeadlineHub.Infrastructure.Common.Configurations;
 using HeadlineHub.Infrastructure.JwtAuthentication;
 using HeadlineHub.Infrastructure.JwtAuthentication.Options;
 using HeadlineHub.Infrastructure.Services;
@@ -14,39 +15,39 @@ namespace HeadlineHub.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddHeadlineHubIdentity(this IServiceCollection services, 
+    public static void AddHeadlineHubIdentity(this IServiceCollection services,
         ConfigurationManager configuration)
     {
         var jwtOptions = new JwtOptions();
         configuration.Bind(nameof(JwtOptions), jwtOptions);
-        
+
         services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options => 
+            .AddJwtBearer(options =>
                 options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtOptions.Issuer,
-                ValidAudience = jwtOptions.Audience,
-                RequireExpirationTime = true,
-                LifetimeValidator = TokenLifetimeValidator.Validate,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtOptions.Secret))
-            });
-        return services;
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    RequireExpirationTime = true,
+                    LifetimeValidator = TokenLifetimeValidator.Validate,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions.Secret))
+                });
     }
 
-    public static IServiceCollection AddHeadlineHubWorkers(this IServiceCollection services)
+    public static void AddHeadlineHubWorkers(this IServiceCollection services,
+        ConfigurationManager configuration)
     {
         services.AddMemoryCache();
+        services.Configure<CacheSettings>(configuration.GetSection(nameof(CacheSettings)));
         services.AddSingleton<ISyndicationWorker, SyndicationWorker>();
         services.AddSingleton<IRssWorkerService, RssWorkerService>();
         services.Decorate<IRssWorkerService, RssWorkerCacheDecorator>();
-        return services;
     }
 }

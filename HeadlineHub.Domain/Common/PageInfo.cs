@@ -1,14 +1,6 @@
 ﻿namespace HeadlineHub.Domain.Common;
 
-public class PageInfo
-{
-    public int? Index { get; set; }
-    
-    public int? Size { get; set; }
-
-    public PageInfo(int? index, int? size)
-    {
-        Index = index;
-        Size = size;
-    }
-}
+public record PageInfo(
+    int? Index,
+    int? Size
+);

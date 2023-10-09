@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace HeadlineHub.Infrastructure;
+namespace HeadlineHub.Infrastructure.JwtAuthentication;
 
 public static class TokenLifetimeValidator
 {
