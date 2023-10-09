@@ -4,7 +4,7 @@ using HeadlineHub.Api;
 using HeadlineHub.Api.Models;
 using HeadlineHub.Api.Services.Implementations;
 using HeadlineHub.Api.Services.Interfaces;
-using HeadlineHub.Identity;
+using HeadlineHub.Infrastructure;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

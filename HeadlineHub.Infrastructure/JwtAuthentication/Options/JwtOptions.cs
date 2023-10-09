@@ -1,4 +1,4 @@
-﻿namespace HeadlineHub.Identity.JwtAuthentication.Options;
+﻿namespace HeadlineHub.Infrastructure.JwtAuthentication.Options;
 
 public class JwtOptions
 {

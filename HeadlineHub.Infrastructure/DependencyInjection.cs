@@ -1,12 +1,12 @@
 ﻿using System.Text;
-using HeadlineHub.Identity.JwtAuthentication;
-using HeadlineHub.Identity.JwtAuthentication.Options;
+using HeadlineHub.Infrastructure.JwtAuthentication;
+using HeadlineHub.Infrastructure.JwtAuthentication.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HeadlineHub.Identity;
+namespace HeadlineHub.Infrastructure;
 
 public static class DependencyInjection
 {

@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\HeadlineHub.Identity\HeadlineHub.Identity.csproj" />
+      <ProjectReference Include="..\HeadlineHub.Infrastructure\HeadlineHub.Infrastructure.csproj" />
     </ItemGroup>
 
 

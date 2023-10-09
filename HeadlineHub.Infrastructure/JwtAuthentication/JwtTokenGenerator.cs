@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using HeadlineHub.Identity.JwtAuthentication.Options;
+using HeadlineHub.Infrastructure.JwtAuthentication.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HeadlineHub.Identity.JwtAuthentication;
+namespace HeadlineHub.Infrastructure.JwtAuthentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {

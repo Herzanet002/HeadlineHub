@@ -2,8 +2,6 @@
 using FluentValidation;
 using HeadlineHub.Api.Models;
 using HeadlineHub.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -29,8 +27,7 @@ public class NewsEndpoints : CarterModule
         _rssFeeders = rssFeeders;
         _pageInfoValidator = pageInfoValidator;
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNews(int? pageSize, int? pageIndex)
     {
         var pageInfo = new PageInfo(pageIndex, pageSize);

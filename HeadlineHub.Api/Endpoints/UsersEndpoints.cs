@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Carter;
-using HeadlineHub.Identity.JwtAuthentication;
+using HeadlineHub.Infrastructure.JwtAuthentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeadlineHub.Api.Endpoints;

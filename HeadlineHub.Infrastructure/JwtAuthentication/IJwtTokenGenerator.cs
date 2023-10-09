@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace HeadlineHub.Identity.JwtAuthentication;
+namespace HeadlineHub.Infrastructure.JwtAuthentication;
 
 public interface IJwtTokenGenerator
 {
