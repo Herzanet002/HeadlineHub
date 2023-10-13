@@ -17,7 +17,7 @@ public class RssWorkerService : IRssWorkerService
         _rssFeeders = rssFeeders.Value;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(PageInfo pageInfo)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeedsAsync(PageInfo pageInfo)
     {
         var syndicationFeedsTasks =
             _rssFeeders.Select(feed => _syndicationWorker.GetSyndicationFeedAsync(feed, pageInfo));
@@ -28,10 +28,11 @@ public class RssWorkerService : IRssWorkerService
         {
             contentModels.AddRange(feed.Select(item => item!.CreateContentModel()));
         }
+
         return contentModels;
     }
 
-    public async ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, PageInfo pageInfo)
+    public async ValueTask<IEnumerable<ContentModel>> GetFeedsAsync(IEnumerable<Guid> feedersIds, PageInfo pageInfo)
     {
         var suitableFeeders = FindSuitableFeeders(_rssFeeders, feedersIds);
         var syndicationFeedsTasks = suitableFeeders
@@ -46,8 +47,12 @@ public class RssWorkerService : IRssWorkerService
 
         return contentModels;
     }
-    
-    private static IEnumerable<CategorizedFeeder> FindSuitableFeeders(IEnumerable<RssFeeder> feeders, IEnumerable<Guid> feederIds)
+
+    public IEnumerable<RssFeeder> GetRssFeeders()
+        => _rssFeeders;
+
+    private static IEnumerable<CategorizedFeeder> FindSuitableFeeders(IEnumerable<RssFeeder> feeders,
+        IEnumerable<Guid> feederIds)
     {
         var intersectedMain = feeders.IntersectBy(feederIds, feeder => feeder.Id);
         var categorizedFeeds = feeders.Where(rssFeeder => rssFeeder.CategorizedFeeders != null)

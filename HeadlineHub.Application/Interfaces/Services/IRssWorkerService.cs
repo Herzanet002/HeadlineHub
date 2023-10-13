@@ -4,7 +4,9 @@ namespace HeadlineHub.Application.Interfaces.Services;
 
 public interface IRssWorkerService
 {
-    ValueTask<IEnumerable<ContentModel>> GetFeeds(PageInfo pageInfo);
+    ValueTask<IEnumerable<ContentModel>> GetFeedsAsync(PageInfo pageInfo);
 
-    ValueTask<IEnumerable<ContentModel>> GetFeeds(IEnumerable<Guid> feedersIds, PageInfo pageInfo);
+    ValueTask<IEnumerable<ContentModel>> GetFeedsAsync(IEnumerable<Guid> feedersIds, PageInfo pageInfo);
+
+    IEnumerable<RssFeeder> GetRssFeeders();
 }
