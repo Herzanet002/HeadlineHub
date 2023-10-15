@@ -15,8 +15,7 @@ builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("Fe
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(ApiConstants), ServiceLifetime.Singleton);
 builder.Services.AddHttpClient();
 builder.Services.AddCarter();
-builder.Services.AddHeadlineHubWorkers(builder.Configuration);
-builder.Services.AddHeadlineHubIdentity(builder.Configuration);
+builder.Services.AddHeadlineHubInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 app.UseSwagger();
