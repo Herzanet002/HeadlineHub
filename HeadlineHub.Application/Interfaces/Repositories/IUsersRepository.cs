@@ -4,7 +4,7 @@ namespace HeadlineHub.Application.Interfaces.Repositories;
 
 public interface IUsersRepository
 {
-    Task<bool> TryRegisterAsync(string username);
+    Task RegisterAsync(string login);
     
-    Task<User?> GetUserByUsernameAsync(string username);
+    Task<User?> GetByLoginAsync(string username);
 }

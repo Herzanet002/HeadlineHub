@@ -16,28 +16,28 @@ public class UsersRepository : IUsersRepository
         _logger = logger;
     }
 
-    public async Task<bool> TryRegisterAsync(string username)
+    public async Task RegisterAsync(string login)
     {
         using var connection = _connectorFactory.CreateConnection();
         try
         {
             await connection.ExecuteAsync(
                 "INSERT INTO Users (user_name) VALUES (@username)",
-                new { username });
-            return true;
+                new { username = login });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to register user {username}", username);
-            return false;
+            _logger.LogError(ex, "Failed to register user {username}", login);
+            throw;
         }
     }
 
-    public async Task<User?> GetUserByUsernameAsync(string username)
+    public async Task<User?> GetByLoginAsync(string username)
     {
         using var connection = _connectorFactory.CreateConnection();
         var user = await connection.QueryFirstOrDefaultAsync<User>(
-            "SELECT * FROM Users WHERE user_name = @username",
+            "SELECT TOP 1 user_name UserName, registration_date RegistrationDate, user_id UserId " +
+            "FROM dbo.users WHERE user_name = @username",
             new { username });
         return user;
     }

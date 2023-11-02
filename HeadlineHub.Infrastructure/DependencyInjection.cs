@@ -26,7 +26,7 @@ public static class DependencyInjection
         configuration.Bind(nameof(JwtOptions), jwtOptions);
 
         services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

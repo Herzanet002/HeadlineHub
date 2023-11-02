@@ -1,6 +1,6 @@
-using Carter;
 using FluentValidation;
 using HeadlineHub.Api;
+using HeadlineHub.Api.Endpoints;
 using HeadlineHub.Domain.Common;
 using HeadlineHub.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -12,12 +12,13 @@ ConfigureSwaggerGen(builder);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.Configure<List<RssFeeder>>(builder.Configuration.GetSection("FeedResources"));
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(ApiConstants), ServiceLifetime.Singleton);
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(IdentityConstants), ServiceLifetime.Singleton);
 builder.Services.AddHttpClient();
-builder.Services.AddCarter();
 builder.Services.AddHeadlineHubInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+NewsEndpoints.MapEndpoints(app, "api/news", new[] { "News" });
+ProfilesEndpoints.MapEndpoints(app, "api/profiles", new[] { "Profiles" });
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -25,7 +26,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapCarter();
 app.Run();
 return;
 
