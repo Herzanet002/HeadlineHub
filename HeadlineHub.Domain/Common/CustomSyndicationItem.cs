@@ -1,8 +1,8 @@
 ﻿using System.ServiceModel.Syndication;
 
-namespace HeadlineHub.Api.Models;
+namespace HeadlineHub.Domain.Common;
 
-public class CustomSyndicationItem
+public record CustomSyndicationItem
 {
     public Guid FeederId { get; init; }
 

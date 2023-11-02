@@ -1,49 +1,38 @@
-﻿using Carter;
-using FluentValidation;
+﻿using FluentValidation;
 using HeadlineHub.Api.Models;
-using HeadlineHub.Api.Services.Interfaces;
+using HeadlineHub.Application.Interfaces.Services;
+using HeadlineHub.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace HeadlineHub.Api.Endpoints;
 
-public class NewsEndpoints : CarterModule
+public static class NewsEndpoints
 {
-    private readonly IRssWorkerService _rssWorkerService;
-    private readonly IOptionsMonitor<List<RssFeeder>> _rssFeeders;
-    private readonly IValidator<PageInfo> _pageInfoValidator;
-    private const string ApiRoutePath = "/api";
-
-    public override void AddRoutes(IEndpointRouteBuilder app)
+    public static void MapEndpoints(WebApplication app, string endpointBaseAddress, string[] openApiTags)
     {
-        app.MapGet($"{ApiRoutePath}/news", GetPaginatedNews);
-        app.MapGet($"{ApiRoutePath}/news-providers", GetRssFeeders);
-        app.MapPost($"{ApiRoutePath}/news", GetPaginatedNewsByFeeders);
-    }
+        app.MapGet(endpointBaseAddress, async (
+            [FromServices] IValidator<PageInfo> pageInfoValidator,
+            [FromServices] IRssWorkerService rssWorkerService,
+            int? pageSize, int? pageIndex) =>
+        {
+            var pageInfo = new PageInfo(pageIndex, pageSize);
+            await pageInfoValidator.ValidateAndThrowAsync(pageInfo);
+            return await rssWorkerService.GetFeedsAsync(pageInfo);
+        }).WithTags(openApiTags).RequireAuthorization();
 
-    public NewsEndpoints(IRssWorkerService rssWorkerService, IOptionsMonitor<List<RssFeeder>> rssFeeders,
-        IValidator<PageInfo> pageInfoValidator)
-    {
-        _rssWorkerService = rssWorkerService;
-        _rssFeeders = rssFeeders;
-        _pageInfoValidator = pageInfoValidator;
-    }
+        app.MapGet("news-providers", (
+                [FromServices] IRssWorkerService rssWorkerService)
+            => rssWorkerService.GetRssFeeders()).WithTags(openApiTags);
 
-    private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNews(int? pageSize, int? pageIndex)
-    {
-        var pageInfo = new PageInfo(pageIndex, pageSize);
-        await _pageInfoValidator.ValidateAndThrowAsync(pageInfo);
-        return await _rssWorkerService.GetFeeds(pageInfo);
-    }
-
-    private IEnumerable<RssFeeder> GetRssFeeders()
-        => _rssFeeders.CurrentValue;
-
-    private async ValueTask<IEnumerable<ContentModel>> GetPaginatedNewsByFeeders(
-        [FromBody] GetNewsByFeedersDto feedersDto, int? pageSize, int? pageIndex)
-    {
-        var pageInfo = new PageInfo(pageIndex, pageSize);
-        await _pageInfoValidator.ValidateAndThrowAsync(pageInfo);
-        return await _rssWorkerService.GetFeeds(feedersDto.Ids, pageInfo);
+        app.MapPost(endpointBaseAddress, async (
+            [FromServices] IValidator<PageInfo> pageInfoValidator,
+            [FromServices] IRssWorkerService rssWorkerService,
+            [FromBody] GetNewsByFeedersDto feedersDto,
+            int? pageSize, int? pageIndex) =>
+        {
+            var pageInfo = new PageInfo(pageIndex, pageSize);
+            await pageInfoValidator.ValidateAndThrowAsync(pageInfo);
+            return await rssWorkerService.GetFeedsAsync(feedersDto.Ids, pageInfo);
+        }).WithTags(openApiTags).RequireAuthorization();
     }
 }

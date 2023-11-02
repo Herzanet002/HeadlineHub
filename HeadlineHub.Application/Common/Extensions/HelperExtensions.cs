@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using HeadlineHub.Api.Models;
+using HeadlineHub.Domain.Common;
 
-namespace HeadlineHub.Api;
+namespace HeadlineHub.Application.Common.Extensions;
 
 public static partial class HelperExtensions
 {
